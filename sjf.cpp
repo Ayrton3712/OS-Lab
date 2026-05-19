@@ -38,5 +38,9 @@ int main(){
         cout << "P" << pid[idx] << "\t" << bt[idx] << "\t" << wt[i] << "\t" << tat[i] << endl;
     }
 
+    double avgWt = 0;
+    for (int i = 0; i < n; i++) avgWt += wt[i];
+    cout << "\nAverage Waiting Time: " << avgWt / n << endl;
+
     return 0;
 }
