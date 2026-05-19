@@ -1,5 +1,7 @@
 #include <iostream>
 #include <vector>
+#include <iomanip>
+#include <string>
 
 using namespace std;
 
@@ -73,6 +75,77 @@ bool isSafe(vector<int>& safeSeq){
     return true;
 }
 
+void printTable(const vector<int>& safeSeq){
+    // Replay the safe sequence to capture available resources before each step
+    vector<vector<int>> workBefore(safeSeq.size());
+    vector<int> work = Available;
+    for (int i = 0; i < (int)safeSeq.size(); i++){
+        workBefore[i] = work;
+        int proc = safeSeq[i];
+        for (int j = 0; j < R; j++)
+            work[j] += Allocation[proc][j];
+    }
+    // work now holds total resources (final available after all processes finish)
+
+    auto printVec = [&](const vector<int>& v){
+        for (int j = 0; j < R; j++)
+            cout << setw(4) << v[j];
+    };
+    auto printLabels = [&](){
+        for (int j = 0; j < R; j++)
+            cout << setw(4) << (char)('A' + j);
+    };
+
+    const int procW = 10, colW = 4 * R;
+    const string sep(procW + colW * 4 + 10, '-');
+
+    cout << "\n";
+    cout << left << setw(procW) << "Process"
+         << setw(colW + 2) << "Allocation"
+         << setw(colW + 2) << "Maximum"
+         << setw(colW + 6) << "Current Available"
+         << "Remaining Needed\n";
+
+    cout << setw(procW) << "";
+    printLabels(); cout << "  ";
+    printLabels(); cout << "  ";
+    printLabels(); cout << "      ";
+    printLabels(); cout << "\n";
+    cout << sep << "\n";
+
+    for (int i = 0; i < (int)safeSeq.size(); i++){
+        int proc = safeSeq[i];
+
+        cout << left << setw(procW) << ("P" + to_string(proc + 1));
+        printVec(Allocation[proc]); cout << "  ";
+        printVec(Max[proc]);        cout << "  ";
+        printVec(workBefore[i]);    cout << "      ";
+        printVec(Need[proc]);       cout << "\n";
+
+        // Show allocation released after this process finishes
+        cout << setw(procW) << ""
+             << string(colW + 2, ' ')
+             << string(colW + 2, ' ')
+             << " +";
+        for (int j = 0; j < R; j++)
+            cout << setw(4) << Allocation[proc][j];
+        cout << "\n";
+    }
+
+    cout << sep << "\n";
+
+    // Total row: sum of all allocations, and final available (total resources)
+    vector<int> totalAlloc(R, 0);
+    for (int i = 0; i < P; i++)
+        for (int j = 0; j < R; j++)
+            totalAlloc[j] += Allocation[i][j];
+
+    cout << left << setw(procW) << "Total";
+    printVec(totalAlloc); cout << "  ";
+    cout << setw(colW + 2) << "";
+    printVec(work); cout << "\n\n";
+}
+
 void printSafeSeq(const vector<int>& safeSeq){
     cout << "Safe Sequence: ";
     for (int i = 0; i < (int)safeSeq.size(); i++){
@@ -89,6 +162,7 @@ int main(){
     vector<int> safeSeq;
     if (isSafe(safeSeq)){
         cout << "\nSystem is in SAFE state.\n";
+        printTable(safeSeq);
         printSafeSeq(safeSeq);
     } else {
         cout << "\nSystem is in UNSAFE state.\n";
