@@ -10,7 +10,7 @@ int main(){
     cout << "Enter the number of processes: ";
     cin >> n;
 
-    vector<int> at(n), bt(n), wt(n), tat(n);
+    vector<int> at(n), bt(n), ct(n), wt(n), tat(n);
     vector<bool> done(n, false);
 
     cout << "Enter arrival time and burst time for each process:\n";
@@ -36,14 +36,15 @@ int main(){
 
         wt[idx] = time - at[idx];
         time += bt[idx];
+        ct[idx] = time;
         tat[idx] = time - at[idx];
         done[idx] = true;
         completed++;
     }
 
-    cout << "\nProcess\tArrival\tBurst\tWaiting\tTurnaround\n";
+    cout << "\nProcess\tArrival\tBurst\tCompletion\tWaiting\tTurnaround\n";
     for (int i = 0; i < n; i++){
-        cout << "P" << i + 1 << "\t" << at[i] << "\t" << bt[i] << "\t" << wt[i] << "\t" << tat[i] << endl;
+        cout << "P" << i + 1 << "\t" << at[i] << "\t" << bt[i] << "\t" << ct[i] << "\t\t" << wt[i] << "\t" << tat[i] << endl;
     }
 
     double avgWt = 0, avgTat = 0;

@@ -10,8 +10,7 @@ int main(){
     cout << "Enter the number of processes: ";
     cin >> n;
 
-    vector<int> at(n), bt(n), priority(n);
-    vector<int> wt(n), tat(n);
+    vector<int> at(n), bt(n), priority(n), ct(n), wt(n), tat(n);
     vector<bool> done(n, false);
 
     cout << "Enter arrival time, burst time, and priority for each process:\n";
@@ -37,22 +36,23 @@ int main(){
 
         wt[idx] = time - at[idx];
         time += bt[idx];
+        ct[idx] = time;
         tat[idx] = time - at[idx];
         done[idx] = true;
         completed++;
     }
 
-    cout << "\nProcess\tArrival\tBurst\tPriority\tWaiting\tTurnaround\n";
+    cout << "\nProcess\tArrival\tBurst\tPriority\tCompletion\tWaiting\tTurnaround\n";
     for (int i = 0; i < n; i++){
-        cout << "P" << i + 1 << "\t" << at[i] << "\t" << bt[i] << "\t" << priority[i] << "\t\t" << wt[i] << "\t" << tat[i] << endl;
+        cout << "P" << i + 1 << "\t" << at[i] << "\t" << bt[i] << "\t" << priority[i] << "\t\t" << ct[i] << "\t\t" << wt[i] << "\t" << tat[i] << endl;
     }
 
-    double avgWt = 0;
-    for (int i = 0; i < n; i++) avgWt += wt[i];
+    double avgWt = 0, avgTat = 0;
+    for (int i = 0; i < n; i++){
+        avgWt += wt[i];
+        avgTat += tat[i];
+    }
     cout << "\nAverage Waiting Time: " << avgWt / n << endl;
-
-    double avgTat = 0;
-    for (int i = 0; i < n; i++) avgTat += tat[i];
     cout << "Average Turnaround Time: " << avgTat / n << endl;
 
     return 0;
