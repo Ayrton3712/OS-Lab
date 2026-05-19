@@ -48,9 +48,9 @@ int main(){
         }
     }
 
-    cout << "\nProcess\tArrival\tBurst\tPriority\tWaiting\tTurnaround\n";
+    cout << "\nProcess\tArrival\tBurst\tPriority\tCompletion\tWaiting\tTurnaround\n";
     for (int i = 0; i < n; i++){
-        cout << "P" << i + 1 << "\t" << at[i] << "\t" << bt[i] << "\t" << priority[i] << "\t\t" << wt[i] << "\t" << tat[i] << endl;
+        cout << "P" << i + 1 << "\t" << at[i] << "\t" << bt[i] << "\t" << priority[i] << "\t\t" << ct[i] << "\t\t" << wt[i] << "\t" << tat[i] << endl;
     }
 
     double avgWt = 0;
