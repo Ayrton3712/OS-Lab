@@ -4,7 +4,7 @@ using namespace std;
 int main()
 {
     int pages[50], frames[10], time[10];
-    int n, f, i, j, pos, fault = 0, counter = 0;
+    int n, f, i, j, pos, fault = 0, hit = 0, counter = 0;
     bool found;
 
     cout<<"Enter number of pages: ";
@@ -57,14 +57,18 @@ int main()
 
             fault++;
         }
+        else
+            hit++;
 
         // Display frames
-        cout<<"\nFrames: ";
+        cout<<"\nPage "<<pages[i]<<" -> Frames: ";
         for(j=0;j<f;j++)
             cout<<frames[j]<<" ";
+        cout<<(found ? "| HIT" : "| FAULT");
     }
 
-    cout<<"\n\nTotal Page Faults = "<<fault;
+    cout<<"\n\nTotal Page Hits = "<<hit;
+    cout<<"\nTotal Page Faults = "<<fault;
 
     return 0;
 }
