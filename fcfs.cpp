@@ -1,5 +1,7 @@
 #include <iostream>
 #include <vector>
+#include <algorithm>
+#include <numeric>
 
 using namespace std;
 
@@ -9,32 +11,37 @@ int main(){
     cout << "Enter the number of processes: ";
     cin >> n;
 
-    vector<int> bt(n), wt(n), tat(n);
+    vector<int> at(n), bt(n), wt(n), tat(n);
 
-    cout << "Enter burst time:\n";
+    cout << "Enter arrival time and burst time for each process:\n";
     for (int i = 0; i < n; i++){
-        cin >> bt[i];
+        cin >> at[i] >> bt[i];
     }
 
-    wt[0] = 0;
+    vector<int> order(n);
+    iota(order.begin(), order.end(), 0);
+    sort(order.begin(), order.end(), [&](int a, int b){ return at[a] < at[b]; });
 
-    for (int i = 1; i < n; i++){
-        wt[i] = wt[i - 1] + bt[i - 1];
-    }
-
-    cout << "\nProcess\tBurst\tWaiting\tTurnaround\n";
-
+    int time = 0;
     for (int i = 0; i < n; i++){
-        tat[i] = wt[i] + bt[i];
-        cout << "P" << i + 1 << "\t" << bt[i] << "\t" << wt[i] << "\t" << tat[i] << endl;
+        int idx = order[i];
+        time = max(time, at[idx]);  // advance clock if CPU is idle before next arrival
+        wt[idx] = time - at[idx];
+        time += bt[idx];
+        tat[idx] = time - at[idx];
     }
 
-    double avgWt = 0;
-    for (int i = 0; i < n; i++) avgWt += wt[i];
+    cout << "\nProcess\tArrival\tBurst\tWaiting\tTurnaround\n";
+    for (int i = 0; i < n; i++){
+        cout << "P" << i + 1 << "\t" << at[i] << "\t" << bt[i] << "\t" << wt[i] << "\t" << tat[i] << endl;
+    }
+
+    double avgWt = 0, avgTat = 0;
+    for (int i = 0; i < n; i++){
+        avgWt += wt[i];
+        avgTat += tat[i];
+    }
     cout << "\nAverage Waiting Time: " << avgWt / n << endl;
-
-    double avgTat = 0;
-    for (int i = 0; i < n; i++) avgTat += tat[i];
     cout << "Average Turnaround Time: " << avgTat / n << endl;
 
     return 0;
