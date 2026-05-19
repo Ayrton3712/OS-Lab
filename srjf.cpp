@@ -58,5 +58,9 @@ int main(){
     for (int i = 0; i < n; i++) avgWt += wt[i];
     cout << "\nAverage Waiting Time: " << avgWt / n << endl;
 
+    double avgTat = 0;
+    for (int i = 0; i < n; i++) avgTat += tat[i];
+    cout << "Average Turnaround Time: " << avgTat / n << endl;
+
     return 0;
 }
