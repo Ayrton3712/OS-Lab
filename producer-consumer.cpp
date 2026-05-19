@@ -9,6 +9,7 @@ int in = 0, out = 0, bufferCount = 0;
 
 void produce(int);
 void consume();
+void printBuffer();
 
 int main(){
     int choice, item;
@@ -37,9 +38,22 @@ int main(){
     return 0;
 }
 
+void printBuffer(){
+    cout << "Buffer [" << bufferCount << "/" << SIZE << "]: [ ";
+    for (int i = 0; i < SIZE; i++){
+        if (i < bufferCount)
+            cout << buffer[(out + i) % SIZE];
+        else
+            cout << "_";
+        if (i < SIZE - 1) cout << " | ";
+    }
+    cout << " ]\n";
+}
+
 void produce(int item){
     if (bufferCount == SIZE){
         cout << "Buffer is full\n";
+        printBuffer();
         return;
     }
 
@@ -48,16 +62,20 @@ void produce(int item){
     bufferCount++;
 
     cout << "Produced " << item << "\n";
+    printBuffer();
 }
 
 void consume(){
     if (bufferCount == 0){
         cout << "Buffer is empty\n";
+        printBuffer();
         return;
     }
+
     int item = buffer[out];
     out = (out + 1) % SIZE;
     bufferCount--;
 
     cout << "Consumed " << item << "\n";
+    printBuffer();
 }
